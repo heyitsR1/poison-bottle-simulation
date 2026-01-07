@@ -105,16 +105,13 @@ def render_prisoners(prisoners: int, dead: set[int]):
     print(C.BOLD + "  PRISONER STATUS" + C.RESET)
     print(C.CYAN + "━" * 50 + C.RESET)
     
-    # Show prisoners in rows of 5
     for row_start in range(0, prisoners, 5):
         row_end = min(row_start + 5, prisoners)
         
-        # Print prisoner numbers
         for i in range(row_start, row_end):
             print(f"  P{i:02d}  ", end="")
         print()
         
-        # Print prisoner figures
         lines = [line for line in (DEAD if row_start in dead else ALIVE).split('\n') if line]
         for line_idx in range(len(lines)):
             for i in range(row_start, row_end):
@@ -157,7 +154,6 @@ def visualize(result: dict):
     render_decoding(result["dead_prisoners"], result["prisoners"])
     print()
     
-    # Success/failure indicator
     if result["correct"]:
         print(C.GREEN + C.BOLD + "  ✓ SUCCESS! Poisoned bottle identified correctly!" + C.RESET)
     else:
