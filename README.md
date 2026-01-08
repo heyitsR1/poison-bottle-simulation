@@ -16,14 +16,16 @@
 ## Try it out with a simple Cntrl + C and Cntrl + V: 
 
 - Use via curl or wget:
-  ```
-  curl -fsSL https://raw.githubusercontent.com/heyitsR1/poison-bottle-simulation/main/poison-prisoner.py | python3
-  ```
-  ```
-  wget -qO- https://raw.githubusercontent.com/heyitsR1/poison-bottle-simulation/main/poison-prisoner.py | python3
-  ```
+```
+curl -fsSL https://raw.githubusercontent.com/heyitsR1/poison-bottle-simulation/main/posion-prisoner.py | python3
+```
+```
+wget -qO posion-prisoner.py https://raw.githubusercontent.com/heyitsR1/poison-bottle-simulation/main/posion-prisoner.py && python3 posion-prisoner.py
+```
 ### Flags
-  
+```
+curl -fsSL https://raw.githubusercontent.com/heyitsR1/poison-bottle-simulation/main/posion-prisoner.py | python3 - --bottles 512 --prisoners 9
+```
 - Just run python3 poison-prisoner.py || run it with flags
   
    --random , --bottles, --prisoners, --poisoned
