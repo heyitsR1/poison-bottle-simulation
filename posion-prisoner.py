@@ -69,6 +69,9 @@ def main ():
     boot_screen() 
     try: 
         result = run(args.bottles,args.prisoners,poisoned)
+        selection_sequence(result)
+        feeding_sequence(result)
+        waiting_sequence(result)
         visualize(result)
     except ValueError as e: 
         print(e)
@@ -86,8 +89,10 @@ class C:
     GREEN = "\033[32m"
     YELLOW = "\033[33m"
     CYAN = "\033[36m"
+    MAGENTA = "\033[35m"
     DIM = "\033[2m"
     BOLD = "\033[1m"
+    
 ALIVE = """
     O
    ╱│╲
@@ -159,21 +164,104 @@ def visualize(result: dict):
     else:
         print(C.RED + C.BOLD + "  ✗ FAILED! Something went wrong." + C.RESET)
     print()
+    print()
+    print()
+    print()
 
+def selection_sequence(result: dict):
+    print(C.YELLOW + C.BOLD + "\n📦 BOTTLE SELECTION PHASE" + C.RESET)
+    print(C.DIM + "━" * 50 + C.RESET)
+    pause(1.0)
     
-def pause(sec=0.4):
+    print(C.DIM + "  Scanning wine cellar..." + C.RESET)
+    for i in range(3):
+        pause(0.4)
+        print(C.DIM + f"  🍷 Bottles checked: {random.randint(1, result['bottles'])}" + C.RESET, end='\r')
+    print()
+    pause(0.8)
+    
+    print(C.RED + C.BOLD + f"\n  ☠️  POISON DETECTED in Bottle #{result['poisoned']}" + C.RESET)
+    pause(1.2)
+    print(C.DIM + f"  Binary signature: {encode_bottle(result['poisoned'], result['prisoners'])}" + C.RESET)
+    pause(1.0)
+
+def feeding_sequence(result: dict):
+    print(C.MAGENTA + C.BOLD + "\n🍷 FEEDING PHASE" + C.RESET)
+    print(C.DIM + "━" * 50 + C.RESET)
+    pause(1.0)
+    
+    binary = encode_bottle(result['poisoned'], result['prisoners'])
+    
+    print(C.DIM + "  Preparing wine samples according to binary protocol..." + C.RESET)
+    pause(1.2)
+    
+    for i in range(result['prisoners']):
+        bit = binary[i]
+        if bit == '1':
+            print(C.YELLOW + f"  ➜ Prisoner {i:02d}: " + C.RED + "RECEIVES wine sample" + C.RESET)
+        else:
+            print(C.DIM + f"  ➜ Prisoner {i:02d}: no sample (control group)" + C.RESET)
+        pause(0.5)
+    
+    pause(1.0)
+    print(C.DIM + "\n  All samples administered." + C.RESET)
+    pause(0.8)
+
+def waiting_sequence(result: dict):
+    print(C.CYAN + C.BOLD + "\n⏳ OBSERVATION PERIOD" + C.RESET)
+    print(C.DIM + "━" * 50 + C.RESET)
+    pause(1.0)
+    
+    print(C.DIM + "  Monitoring subjects for symptoms..." + C.RESET)
+    pause(1.5)
+    
+    stages = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+    for _ in range(12):
+        for stage in stages:
+            print(C.CYAN + f"  {stage} Waiting..." + C.RESET, end='\r')
+            pause(0.15)
+    print()
+    
+    pause(1.0)
+    print(C.RED + C.BOLD + "\n  ⚠️  CASUALTIES DETECTED" + C.RESET)
+    pause(1.2)
+    
+    dead = result['dead_prisoners']
+    if dead:
+        for prisoner_id in dead:
+            print(C.RED + f"  ✝ Prisoner {prisoner_id:02d} has perished" + C.RESET)
+            pause(0.6)
+    else:
+        print(C.GREEN + "  ✓ No casualties - poison bottle was #0 (all zeros)" + C.RESET)
+    
+    pause(1.5)
+
+def pause(sec=0.8):
     time.sleep(sec)
 
 def boot_screen():
     print(C.CYAN + C.BOLD + TITLE + C.RESET)
     print(C.DIM + SUBTITLE + C.RESET)
+    pause(1.5)
+    print(C.DIM + "🔧 Initializing experiment protocol..." + C.RESET)
     pause(1.2)
-    print(C.DIM + "Initializing experiment..." + C.RESET)
+    print(C.DIM + "👥 Assembling test subjects..." + C.RESET)
+    for i in range(3):
+        pause(0.5)
+        print(C.DIM + "   ." * (i + 1) + C.RESET)
+    pause(1.0)
+    print(C.GREEN + "   ✓ Prisoners ready" + C.RESET)
     pause(0.8)
-    print()
+    print(C.DIM + "🍷 Preparing wine bottles..." + C.RESET)
+    pause(1.2)
+    print(C.GREEN + "   ✓ Wine cellar accessible" + C.RESET)
+    pause(1.0)
 
 
 TITLE = r"""
+
+
+
 ██████╗  ██████╗ ██╗███████╗ ██████╗ ███╗   ██╗
 ██╔══██╗██╔═══██╗██║██╔════╝██╔═══██╗████╗  ██║
 ██████╔╝██║   ██║██║███████╗██║   ██║██╔██╗ ██║
@@ -185,8 +273,8 @@ TITLE = r"""
 """
 
 SUBTITLE = """
-      🍷 1000 bottles  |  ⚰️  1 poison
-      🔢 Binary encoding  |  📰 Information theory
+      🍷 1000 bottles  |  ☠️  1 poison
+      🔢 Binary encoding  |  📊 Information theory
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
